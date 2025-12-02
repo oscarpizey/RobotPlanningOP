@@ -4,8 +4,6 @@
 #include "loadFont.h"
 #include "structs.h"
 
-int loadFont(struct fontData *letters);
-
 int main()
 {
     //struct fontData *pLetters = &letters[0];
