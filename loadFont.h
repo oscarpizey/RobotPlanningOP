@@ -6,7 +6,7 @@
 int loadFont(struct fontData *letters)
 {
     FILE *file;
-    file = fopen("SingleStrokeFontData.txt", "r");
+    file = fopen("SingleStrokeFont.txt", "r");
     if (file == NULL)
     {
         perror("Error opening file");
@@ -31,7 +31,7 @@ int loadFont(struct fontData *letters)
                 letters[asciiCode].x[i] = x;    //append scan data into the array
                 letters[asciiCode].y[i] = y;
                 letters[asciiCode].p[i] = p;
-                printf("ASCII: %d, LINES: %d\n%d %d %d\n",letters[asciiCode].ascii,letters[asciiCode].lines,letters[asciiCode].x[i],letters[asciiCode].y[i],letters[asciiCode].p[i]);
+                //printf("ASCII: %d, LINES: %d\n%d %d %d\n",letters[asciiCode].ascii,letters[asciiCode].lines,letters[asciiCode].x[i],letters[asciiCode].y[i],letters[asciiCode].p[i]);
             }
         }
     }
