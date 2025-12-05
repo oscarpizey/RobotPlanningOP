@@ -58,37 +58,40 @@ int main()
 
     FILE *drawFile;
     int drawWord[128];
+    //int whiteSpace[4] = {32,10,13,-1};
     int filePosition = 0;
     int positionMarker;
     int x = 0;
-    while (drawWord[x-1] != -1){ //check for end of file
+    float remainingWidth = 100;
+    float wordWidth = 0;
+    float xOffset = 0;
+    float yOffset = 0;
+    int drawLetter;
+    char GCODELine[100];
+
+    while (drawWord[x] != -1){ //check for end of file
         drawFile = fopen("test.txt","r");
-        memset(drawWord, 0, sizeof drawWord);
-        x=0;
-        while (drawWord[x-1] != 32){ //32 is ASCII for a space
-            for (positionMarker = 0; positionMarker < filePosition; positionMarker++){
+        x=0; wordWidth=0;
+        positionMarker = 0;
+        while (drawWord[x-1] != 32 && drawWord[x-1] != -1){ //32 is ASCII for a space
+            for (; positionMarker < filePosition; positionMarker++){
                 fgetc(drawFile);
             }
             drawWord[x] = (fgetc(drawFile));
-            printf("\ncurrent character: %c, x value: %d, filePosition: %d", drawWord[x], x, filePosition);
+            //printf("\ncurrent character: %c, ascii: %d, x value: %d, filePosition: %d", drawWord[x], drawWord[x], x, filePosition);
             x++;
-            Sleep(100);
+            //Sleep(100);
         }
-        int prevFilePosition = filePosition;
-        filePosition = x;
+        if (drawWord[x-1] == -1){
+            x--;
+        }
+        filePosition += x;
         fclose(drawFile);
         //printf("\ndrawWord: %s", drawWord);
 
-        float remainingWidth = 100;
-        float wordWidth = 0;
-        float xOffset = 0;
-        float yOffset = 0;
-        int drawLetter;
-        char GCODELine[100];
-
-        for (drawLetter = prevFilePosition; drawLetter <= filePosition; drawLetter++){
+        for (drawLetter = 0; drawLetter <= x; drawLetter++){
             wordWidth += letters[drawWord[drawLetter]].x[letters[drawWord[drawLetter]].lines - 1] * letterScale;
-            printf("\ncurrent letter printing: %c, wordWidth: %f", drawWord[drawLetter], wordWidth);
+            //printf("\ncurrent letter printing: %c, ascii: %d, wordWidth: %f", drawWord[drawLetter], drawWord[drawLetter], wordWidth);
         }
 
         if (wordWidth > 100){
@@ -99,16 +102,16 @@ int main()
                 xOffset = 0;
             }
             int currentLine;
-            for (drawLetter = prevFilePosition; drawLetter <= filePosition; drawLetter++){
+            for (drawLetter = 0; drawLetter <= x; drawLetter++){
                 for (currentLine = 0; currentLine <= letters[drawWord[drawLetter]].lines; currentLine++){
                     //printf("\ncharacter: %c, printing line: %d, required lines: %d", drawWord[drawLetter], currentLine, letters[drawWord[drawLetter]].lines);
                     generateGCODE(letters[drawWord[drawLetter]].x[currentLine], letters[drawWord[drawLetter]].y[currentLine], letters[drawWord[drawLetter]].p[currentLine], letterScale, xOffset, yOffset, GCODELine);
                     SendCommands(GCODELine);
-                    //printf("\n%s", GCODELine);
+                    printf("\n%s", GCODELine);
                 }
                 xOffset += letters[drawWord[drawLetter]].x[letters[drawWord[drawLetter]].lines - 1] * letterScale;
             }
-    }
+        }
     }
     CloseRS232Port();
     printf("Com port now closed\n");
@@ -124,7 +127,7 @@ void SendCommands (char *buffer )
     //PrintBuffer (&buffer[0]);
     //printf("Send Command: %s", buffer);
     //WaitForReply();
-    Sleep(100); // Can omit this when using the writing robot but has minimal effect
+    //Sleep(100); // Can omit this when using the writing robot but has minimal effect
     // getch(); // Omit this once basic testing with emulator has taken place
 }
 
