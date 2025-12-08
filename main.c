@@ -62,37 +62,38 @@ int main()
     int filePosition = 0;
     int x = 0;
     float remainingWidth = 100;
-    float wordWidth = 0;
+    float wordWidth;
     float xOffset = 0;
     float yOffset = 0;
     int drawLetter;
-    char GCODELine[100];
+    char GCODELine[256];
 
     while (drawWord[x+1] != -1){ //check for end of file
+
         filePosition = getDrawWord(filePosition, &drawWord[0], &x);
         wordWidth = 0;
 
-        //printf("\ndrawWord: %s", drawWord);
-
         for (drawLetter = 0; drawLetter <= x; drawLetter++){
             wordWidth += letters[drawWord[drawLetter]].x[letters[drawWord[drawLetter]].lines - 1] * letterScale;
-            //printf("\ncurrent letter printing: %c, ascii: %d, wordWidth: %f", drawWord[drawLetter], drawWord[drawLetter], wordWidth);
+            //printf("\ncurrent letter printing: %c, ascii: %d, wordWidth: %f, remaining width: %f", drawWord[drawLetter], drawWord[drawLetter], wordWidth, remainingWidth);
         }
 
         if (wordWidth > 100){
             printf("\nError - Word too long");
         } else{
-            if (wordWidth > remainingWidth){
-                yOffset += (5 + letterScale);
-                xOffset = 0;
-            }
+            remainingWidth -= wordWidth;
             int currentLine;
             for (drawLetter = 0; drawLetter <= x; drawLetter++){
+                if (wordWidth > remainingWidth || letters[drawWord[drawLetter]].ascii == 10){
+                    yOffset -= (5 + letterHeight);
+                    xOffset = 0;
+                    remainingWidth = 100;
+                }
                 for (currentLine = 0; currentLine <= letters[drawWord[drawLetter]].lines; currentLine++){
-                    //printf("\ncharacter: %c, printing line: %d, required lines: %d", drawWord[drawLetter], currentLine, letters[drawWord[drawLetter]].lines);
+                    printf("\ncharacter: %c, printing line: %d, required lines: %d", drawWord[drawLetter], currentLine, letters[drawWord[drawLetter]].lines);
                     generateGCODE(letters[drawWord[drawLetter]].x[currentLine], letters[drawWord[drawLetter]].y[currentLine], letters[drawWord[drawLetter]].p[currentLine], letterScale, xOffset, yOffset, GCODELine);
                     SendCommands(GCODELine);
-                    printf("\n%s", GCODELine);
+                    //printf("\n%s", GCODELine);
                 }
                 xOffset += letters[drawWord[drawLetter]].x[letters[drawWord[drawLetter]].lines - 1] * letterScale;
             }

@@ -13,7 +13,7 @@ int getDrawWord(int filePosition, int *drawWord, int *x){
             fgetc(drawFile);
         }
         drawWord[i] = (fgetc(drawFile));
-        //printf("\ncurrent character: %c, ascii: %d, x value: %d, filePosition: %d", drawWord[i], drawWord[i], i, filePosition);
+        printf("\ncurrent character: %c, ascii: %d, x value: %d, filePosition: %d", drawWord[i], drawWord[i], i, filePosition);
         i++;
     }
     if (drawWord[i-1] == -1){
