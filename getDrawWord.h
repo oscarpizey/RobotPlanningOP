@@ -13,13 +13,14 @@ int getDrawWord(int filePosition, int *drawWord, int *x){
             fgetc(drawFile);
         }
         drawWord[i] = (fgetc(drawFile));
-        printf("\ncurrent character: %c, ascii: %d, x value: %d, filePosition: %d", drawWord[i], drawWord[i], i, filePosition);
+        //printf("\ncurrent character: %c, ascii: %d, x value: %d, filePosition: %d", drawWord[i], drawWord[i], i, filePosition);
         i++;
     }
-    if (drawWord[i-1] == -1){
-        i-=2;
+    i--;    //last letter is a space, so step x back
+    if (drawWord[i] == -1){
+        i--;    //last letter is EOF, so remove
     }
-    filePosition += i;
+    filePosition += i+1;
     *x = i;
     fclose(drawFile);
     //printf("\ngetDrawWord finished");

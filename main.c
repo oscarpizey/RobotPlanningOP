@@ -57,10 +57,11 @@ int main()
     scanf("%f", &letterHeight);
     float letterScale = letterHeight/18;
 
-    int drawWord[128];
+    int drawWord[24];
     //int whiteSpace[4] = {32,10,13,-1};
     int filePosition = 0;
     int x = 0;
+    int totalLines=0;
     float remainingWidth = 100;
     float wordWidth;
     float xOffset = 0;
@@ -70,6 +71,7 @@ int main()
 
     while (drawWord[x+1] != -1){ //check for end of file
 
+        //memset(drawWord,0,sizeof(drawWord[0]));
         filePosition = getDrawWord(filePosition, &drawWord[0], &x);
         wordWidth = 0;
 
@@ -89,11 +91,12 @@ int main()
                     xOffset = 0;
                     remainingWidth = 100;
                 }
-                for (currentLine = 0; currentLine <= letters[drawWord[drawLetter]].lines; currentLine++){
-                    printf("\ncharacter: %c, printing line: %d, required lines: %d", drawWord[drawLetter], currentLine, letters[drawWord[drawLetter]].lines);
+                for (currentLine = 0; currentLine <= letters[drawWord[drawLetter]].lines-1; currentLine++){
+                    totalLines+=1;
+                    //printf("\ncharacter: %c, printing line: %d, required lines: %d, totalLines: %d", drawWord[drawLetter], currentLine, letters[drawWord[drawLetter]].lines, totalLines);                    
                     generateGCODE(letters[drawWord[drawLetter]].x[currentLine], letters[drawWord[drawLetter]].y[currentLine], letters[drawWord[drawLetter]].p[currentLine], letterScale, xOffset, yOffset, GCODELine);
                     SendCommands(GCODELine);
-                    //printf("\n%s", GCODELine);
+                    printf("\n%s", GCODELine);
                 }
                 xOffset += letters[drawWord[drawLetter]].x[letters[drawWord[drawLetter]].lines - 1] * letterScale;
             }
