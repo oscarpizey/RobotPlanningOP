@@ -6,6 +6,7 @@
 #include "serial.h"
 #include "structs.h"
 #include "loadFont.h"
+#include "getDrawWord.h"
 
 #define bdrate 115200               /* 115200 baud */
 
@@ -56,11 +57,9 @@ int main()
     scanf("%f", &letterHeight);
     float letterScale = letterHeight/18;
 
-    FILE *drawFile;
     int drawWord[128];
     //int whiteSpace[4] = {32,10,13,-1};
     int filePosition = 0;
-    int positionMarker;
     int x = 0;
     float remainingWidth = 100;
     float wordWidth = 0;
@@ -69,24 +68,10 @@ int main()
     int drawLetter;
     char GCODELine[100];
 
-    while (drawWord[x] != -1){ //check for end of file
-        drawFile = fopen("test.txt","r");
-        x=0; wordWidth=0;
-        positionMarker = 0;
-        while (drawWord[x-1] != 32 && drawWord[x-1] != -1){ //32 is ASCII for a space
-            for (; positionMarker < filePosition; positionMarker++){
-                fgetc(drawFile);
-            }
-            drawWord[x] = (fgetc(drawFile));
-            //printf("\ncurrent character: %c, ascii: %d, x value: %d, filePosition: %d", drawWord[x], drawWord[x], x, filePosition);
-            x++;
-            //Sleep(100);
-        }
-        if (drawWord[x-1] == -1){
-            x--;
-        }
-        filePosition += x;
-        fclose(drawFile);
+    while (drawWord[x+1] != -1){ //check for end of file
+        filePosition = getDrawWord(filePosition, &drawWord[0], &x);
+        wordWidth = 0;
+
         //printf("\ndrawWord: %s", drawWord);
 
         for (drawLetter = 0; drawLetter <= x; drawLetter++){
