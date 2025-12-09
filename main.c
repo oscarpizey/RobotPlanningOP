@@ -12,7 +12,7 @@
 
 void SendCommands (char *buffer );
 
-void generateGCODE(float X, float Y, float P, float scale, float xOffset, float yOffset, char *GCODE);
+void generateGCODE(float X, float Y, float P, float scale, float xOffset, float yOffset, int setPen, char *GCODE);
 
 int main()
 {
@@ -58,7 +58,6 @@ int main()
     float letterScale = letterHeight/18;
 
     int drawWord[24];
-    //int whiteSpace[4] = {32,10,13,-1};
     int filePosition = 0;
     int x = 0;
     int totalLines=0;
@@ -66,6 +65,7 @@ int main()
     float wordWidth;
     float xOffset = 0;
     float yOffset = 0;
+    int penCommand;
     int drawLetter;
     char GCODELine[256];
 
@@ -86,7 +86,7 @@ int main()
             int currentLine;
             remainingWidth = 100 - xOffset;
             for (drawLetter = 0; drawLetter <= x; drawLetter++){
-                if (wordWidth > remainingWidth || letters[drawWord[drawLetter]].ascii == 10){
+                if (wordWidth > remainingWidth || letters[drawWord[drawLetter]].ascii == 10 || letters[drawWord[drawLetter]].ascii == 13){
                     yOffset -= (5 + letterHeight);
                     xOffset = 0;
                     remainingWidth = 100;
@@ -94,10 +94,15 @@ int main()
                 }
                 for (currentLine = 0; currentLine <= letters[drawWord[drawLetter]].lines-1; currentLine++){
                     totalLines+=1;
-                    //printf("\ncharacter: %c, printing line: %d, required lines: %d, totalLines: %d", drawWord[drawLetter], currentLine, letters[drawWord[drawLetter]].lines, totalLines);                    
-                    generateGCODE(letters[drawWord[drawLetter]].x[currentLine], letters[drawWord[drawLetter]].y[currentLine], letters[drawWord[drawLetter]].p[currentLine], letterScale, xOffset, yOffset, GCODELine);
+                    //printf("\ncharacter: %c, printing line: %d, required lines: %d, totalLines: %d", drawWord[drawLetter], currentLine, letters[drawWord[drawLetter]].lines, totalLines);
+                    if (letters[drawWord[drawLetter]].p[currentLine] != letters[drawWord[drawLetter]].p[(currentLine-1)] || currentLine == 0){
+                        penCommand = 1;
+                    }else{
+                        penCommand = 0;
+                    }                    
+                    generateGCODE(letters[drawWord[drawLetter]].x[currentLine], letters[drawWord[drawLetter]].y[currentLine], letters[drawWord[drawLetter]].p[currentLine], letterScale, xOffset, yOffset, penCommand, GCODELine);
                     SendCommands(GCODELine);
-                    printf("\n%s", GCODELine);
+                    //printf("\n%s", GCODELine);
                 }
                 xOffset += letters[drawWord[drawLetter]].x[letters[drawWord[drawLetter]].lines - 1] * letterScale;
             }
@@ -114,14 +119,18 @@ int main()
 void SendCommands (char *buffer )
 {
     // printf ("Buffer to send: %s", buffer); // For diagnostic purposes only, normally comment out
-    //PrintBuffer (&buffer[0]);
+    PrintBuffer (&buffer[0]);
     //printf("Send Command: %s", buffer);
-    //WaitForReply();
-    //Sleep(100); // Can omit this when using the writing robot but has minimal effect
+    WaitForReply();
+    Sleep(100); // Can omit this when using the writing robot but has minimal effect
     // getch(); // Omit this once basic testing with emulator has taken place
 }
 
-void generateGCODE(float X, float Y, float P, float scale, float xOffset, float yOffset, char *GCODE){
-    snprintf(GCODE, 128, "S%f G%f X%f Y%f\n", P*1000, P, ((X*scale) + xOffset), ((Y*scale) + yOffset));
+void generateGCODE(float X, float Y, float P, float scale, float xOffset, float yOffset, int setPen, char *GCODE){
+    if (setPen == 1){
+        snprintf(GCODE, 128, "S%f G%f X%f Y%f\n", P*1000, P, ((X*scale) + xOffset), ((Y*scale) + yOffset));
+    }else{
+        snprintf(GCODE, 128, "G%f X%f Y%f\n", P, ((X*scale) + xOffset), ((Y*scale) + yOffset));
+    }
     //printf("\nGCODE Function Output: %s", *GCODE);
-}    //add setpen after testing
+}

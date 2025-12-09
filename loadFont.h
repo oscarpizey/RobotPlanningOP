@@ -19,7 +19,7 @@ int loadFont(struct fontData *letters)
     int codeLines;
     while (fgets(line, sizeof(line), file) != NULL) //iterate through lines until end of file
     {
-        if (sscanf(line,"999 %d %d", &asciiCode, &codeLines) != NULL){  //scan line for 999 (meaning start of a character)
+        if (sscanf(line,"999 %d %d", &asciiCode, &codeLines) != -1){  //scan line for 999 (meaning start of a character)
             letters[asciiCode].ascii = asciiCode;   //append metadata to structure
             letters[asciiCode].lines = codeLines;
             int x; int y; int p;
