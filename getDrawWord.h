@@ -4,7 +4,6 @@
 
 int getDrawWord(int filePosition, int *drawWord, int *x){
     int i=0;
-    //printf("\ngetDrawWord called");
     FILE *drawFile;
     drawFile = fopen("test.txt","r");
     int positionMarker=0;

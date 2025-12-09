@@ -3,7 +3,7 @@
 #include <string.h>
 #include "structs.h"
 
-int loadFont(struct fontData *letters)
+int loadFont(struct fontData *letters)      // reads straight into pointed array, eliminates messy return.
 {
     FILE *file;
     file = fopen("SingleStrokeFont.txt", "r");
