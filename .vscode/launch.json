@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/oscar/OneDrive - The University of Nottingham/Mechatronics/RobotDrawing/RobotPlanningOP",
-      "program": "c:/Users/oscar/OneDrive - The University of Nottingham/Mechatronics/RobotDrawing/RobotPlanningOP/build/Debug/outDebug",
+      "cwd": "d:/OneDrive - The University of Nottingham/Mechatronics/RobotDrawing/RobotPlanningOP",
+      "program": "d:/OneDrive - The University of Nottingham/Mechatronics/RobotDrawing/RobotPlanningOP/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

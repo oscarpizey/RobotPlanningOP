@@ -8,7 +8,7 @@ int getDrawWord(int filePosition, int *drawWord, int *x){
     FILE *drawFile;
     drawFile = fopen("test.txt","r");
     int positionMarker=0;
-    while (drawWord[i-1] != 32 && drawWord[i-1] != -1){ //32 is ASCII for a space
+    while (drawWord[i-1] != 32 && drawWord[i-1] != -1 && drawWord[i-1] != 10){ //32 is ASCII for a space
         for (; positionMarker < filePosition; positionMarker++){
             fgetc(drawFile);
         }

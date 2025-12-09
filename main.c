@@ -83,13 +83,14 @@ int main()
         if (wordWidth > 100){
             printf("\nError - Word too long");
         } else{
-            remainingWidth -= wordWidth;
             int currentLine;
+            remainingWidth = 100 - xOffset;
             for (drawLetter = 0; drawLetter <= x; drawLetter++){
                 if (wordWidth > remainingWidth || letters[drawWord[drawLetter]].ascii == 10){
                     yOffset -= (5 + letterHeight);
                     xOffset = 0;
                     remainingWidth = 100;
+                    //printf("\nNewline triggered, remaining width = %f", remainingWidth);
                 }
                 for (currentLine = 0; currentLine <= letters[drawWord[drawLetter]].lines-1; currentLine++){
                     totalLines+=1;
